@@ -104,6 +104,53 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Update Data")
 
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.setPadding(50, 40, 50, 10)
+
+        val tvOld = TextView(this)
+        tvOld.text = "Data lama: $oldValue"
+        tvOld.textSize = 16f
+
+        val etNew = EditText(this)
+        etNew.hint = "Masukkan data baru"
+        etNew.setText(oldValue)
+
+        layout.addView(tvOld)
+        layout.addView(etNew)
+
+        builder.setView(layout)
+
+        builder.setPositiveButton("Simpan") { dialog, _ ->
+            val newValue = etNew.text.toString().trim()
+            if (newValue.isNotEmpty()) {
+                data[position] = newValue
+                adapter.notifyDataSetChanged()
+                Toast.makeText(
+                    this,
+                    "Data diupdate jadi: $newValue",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Data baru tidak boleh kosong!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Batal") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
+}
+
+
+
 
 
 
