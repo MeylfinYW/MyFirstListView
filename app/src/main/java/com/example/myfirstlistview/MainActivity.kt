@@ -1,10 +1,17 @@
 package com.example.myfirstlistview
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
