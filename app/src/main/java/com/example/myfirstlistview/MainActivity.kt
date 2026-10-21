@@ -25,10 +25,77 @@ class MainActivity : AppCompatActivity() {
         val _lv1: ListView = findViewById(R.id.lv1)
         _lv1.adapter = lvAdapter
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        val _btnTambah: Button = findViewById(R.id.btnTambah)
+        _btnTambah.setOnClickListener {
+            var dtAkhir = Integer.parseInt(data.get(data.size - 1)) + 1
+            data.add("$dtAkhir")
+
+            lvAdapter.notifyDataSetChanged()
+        }
+
+        _lv1.setOnItemClickListener { parent, view, position, id ->
+            Toast.makeText(
+                this,
+                data[position],
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        val gestureDetector = GestureDetector(
+            this,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    val position = _lv1.pointToPosition(e.x.toInt(), e.y.toInt())
+                    if (position != ListView.INVALID_POSITION) {
+                        val selectedItem = data[position]
+                        showActionDialog(position, selectedItem, data, adapter = lvAdapter)
+                    }
+                    return true
+                }
+            }
+        )
+
+        _lv1.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
+            false
         }
     }
+
+    private fun showActionDialog(
+        position: Int,
+        selectedItem: String,
+        data: MutableList<String>,
+        adapter: ArrayAdapter<String>
+    ) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("ITEM $selectedItem")
+        builder.setMessage("Pilih tindakan yang ingin dilakukan:")
+
+
+        builder.setPositiveButton("Update") { _, _ ->
+            showUpdateDialog(position, selectedItem, data, adapter)
+        }
+
+
+        builder.setNegativeButton("Hapus") { _, _ ->
+            data.removeAt(position)
+            adapter.notifyDataSetChanged()
+            Toast.makeText(
+                this,
+                "Hapus Item $selectedItem",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+
+        builder.setNeutralButton("Batal") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
 }
+
+
+
+
